@@ -23,13 +23,14 @@ setup(
     zip_safe=True,
     maintainer="Koray Özdemir",
     maintainer_email="korayozdemir34@gmail.com",
-    description="D3QN tabanlı sosyal robot navigasyonu (ROS2 + Gazebo) - Eğitim ve Test Altyapısı.",
+    description="D3QN tabanlı sosyal robot navigasyonu (ROS2 + Gazebo) - eğitim ve test altyapısı.",
     license="MIT",
     entry_points={
         "console_scripts": [
             "egit = d3qn_sosyal_navigasyon.src.egit:main",
             "test = d3qn_sosyal_navigasyon.src.test:main",
             "ana_node = d3qn_sosyal_navigasyon.src.ros2_entegrasyon.ana_node:main",
+            "insan_tespit_node = d3qn_sosyal_navigasyon.src.ros2_entegrasyon.yolov5_insan_tespit_node:main",
         ],
     },
 )
