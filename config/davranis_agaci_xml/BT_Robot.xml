@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root main_tree_to_execute="RobotMainController">
+    
+    <TreeNodesModel>
+        <Action ID="CheckCollisionRisk" description="LIDAR verisi ile anlık çarpışma riski hesaplar"/>
+        <Action ID="CalculateTTC" description="Time-to-Collision hesaplama"/>
+        <Action ID="AssessRiskLevel" description="Risk seviyesi değerlendirme"/>
+        <Condition ID="IsCriticalRisk" description="TTC 1s altında mı?"/>
+        <Action ID="HardBrake" description="Sert acil fren uygula"/>
+        <Action ID="ActivateWarnings" description="Uyarı sinyalleri aktif et"/>
+        <Condition ID="IsHighRisk" description="TTC 1-2s arası mı?"/>
+        <Action ID="SoftBrake" description="Yumuşak fren uygula"/>
+        <Action ID="CalculateEscape" description="Kaçış rotası hesapla"/>
+        <Condition ID="IsMediumRisk" description="TTC 2-4s arası mı?"/>
+        <Action ID="PreventiveSlowdown" description="Önleyici yavaşlama"/>
+        <Action ID="LogEmergency" description="Acil durum kaydı"/>
+        
+        <Condition ID="DetectHumanPresence" description="YOLOv5 ile insan varlığı tespit"/>
+        <Action ID="CaptureRGBFrame" description="RGB görüntü yakalama"/>
+        <Action ID="PreprocessImage" description="Görüntü ön işleme 640x640"/>
+        <Action ID="RunYOLOv5" description="YOLOv5 çıkarım"/>
+        <Action ID="FilterConfidence" description="Güven filtresi 0.75"/>
+        <Action ID="OutputBinaryFlag" description="İnsan var/yok çıktısı"/>
+        
+        <Action ID="PreprocessLidar" description="LIDAR ön işleme"/>
+        <Action ID="NormalizeLidar" description="LIDAR normalizasyon"/>
+        <Action ID="DefineNearbyRegion" description="Yakın çevre tanımlama R=3.5m"/>
+        <Action ID="ComputeClosestDistance" description="En yakın mesafe d_en_kucuk"/>
+        <Action ID="ComputeAverageDistance" description="Ortalama mesafe d_ortalama"/>
+        <Action ID="ComputeNearbyCount" description="Yakın varlık sayısı n_yakin"/>
+        <Action ID="ComputeRelativeVelocity" description="Göreli hız v_goreli"/>
+        <Action ID="ComputeApproachRatio" description="Yaklaşma oranı"/>
+        <Action ID="ComputeViolationCount" description="Güvenli mesafe ihlali sayısı"/>
+        <Action ID="ComputeRiskScore" description="Çarpışma risk skoru"/>
+        <Action ID="CombineMetrics" description="7 metriği birleştir"/>
+        
+        <Action ID="CollectLidar360" description="LIDAR 360 boyut topla"/>
+        <Action ID="CollectSocial7" description="Sosyal metrikler 7 boyut"/>
+        <Action ID="CollectRobot7" description="Robot durumu 7 boyut"/>
+        <Action ID="GetRobotPose" description="Robot pozisyonu"/>
+        <Action ID="GetRobotVelocity" description="Robot hızı"/>
+        <Action ID="GetGoalPosition" description="Hedef pozisyonu"/>
+        <Action ID="GetGoalDistance" description="Hedefe mesafe"/>
+        <Action ID="GetGoalAngle" description="Hedef açısı"/>
+        <Action ID="ConcatenateState" description="Durum vektörü birleştir 374"/>
+        
+        <Action ID="Input374" description="Giriş katmanı 374 boyut"/>
+        <Action ID="Hidden512" description="Gizli katman 1 FC 512 ReLU"/>
+        <Action ID="Hidden256" description="Gizli katman 2 FC 256 ReLU"/>
+        <Action ID="Hidden128" description="Gizli katman 3 FC 128 ReLU"/>
+        <Action ID="ValueStream1" description="Value stream FC 1"/>
+        <Action ID="AdvantageStream7" description="Advantage stream FC 7"/>
+        <Action ID="CombineQ" description="Q = V + A - mean A"/>
+        <Action ID="SelectAction" description="En iyi eylem seçimi"/>
+        
+        <Condition ID="IsAction0" description="Eylem index 0 mı?"/>
+        <Action ID="SetAction0" description="Yavaş Sol v=0.2 w=0.785"/>
+        <Condition ID="IsAction1" description="Eylem index 1 mi?"/>
+        <Action ID="SetAction1" description="Yavaş Hafif Sol v=0.2 w=0.393"/>
+        <Condition ID="IsAction2" description="Eylem index 2 mi?"/>
+        <Action ID="SetAction2" description="Yavaş Düz v=0.2 w=0"/>
+        <Condition ID="IsAction3" description="Eylem index 3 mü?"/>
+        <Action ID="SetAction3" description="Yavaş Hafif Sağ v=0.2 w=-0.393"/>
+        <Condition ID="IsAction4" description="Eylem index 4 mü?"/>
+        <Action ID="SetAction4" description="Yavaş Sağ v=0.2 w=-0.785"/>
+        <Condition ID="IsAction5" description="Eylem index 5 mi?"/>
+        <Action ID="SetAction5" description="Hızlı Düz v=0.4 w=0"/>
+        <Condition ID="IsAction6" description="Eylem index 6 mı?"/>
+        <Action ID="SetAction6" description="Dur v=0 w=0"/>
+        <Action ID="OutputVelocity" description="Hız komutu çıktısı"/>
+        
+        <Action ID="CheckKinematic" description="Kinematik sınırlar v=0.26 w=1.82"/>
+        <Action ID="SimulateCollision" description="Çarpışma simülasyonu 1.5s"/>
+        <Action ID="CheckSocialSafety" description="Sosyal güvenlik min 0.5m"/>
+        <Action ID="OutputSafeVelocity" description="Güvenli hız çıktısı"/>
+        <Action ID="PublishVelocity" description="Hız komutu yayınla /cmd_vel"/>
+        
+        <Condition ID="GoalReachedCheck" description="Hedefe d 0.5m altı mı?"/>
+        <Action ID="RewardGoalReached" description="Hedefe ulaşma ödülü +10"/>
+        <Condition ID="DistanceDecreased" description="Mesafe azaldı mı?"/>
+        <Action ID="RewardApproaching" description="Yaklaşma ödülü +0.1xΔd"/>
+        <Condition ID="SafeDistanceCheck" description="Güvenli mesafe d 1.5m üstü mü?"/>
+        <Action ID="RewardSafeDistance" description="Güvenli mesafe ödülü +5"/>
+        <Condition ID="ObstacleDistanceIncreased" description="Engel mesafesi arttı mı?"/>
+        <Action ID="RewardObstacleAvoid" description="Engel kaçınma +3"/>
+        <Condition ID="SlowedNearHuman" description="İnsan yakınında yavaşladı mı?"/>
+        <Action ID="RewardSocialCompliance" description="Sosyal uyum +4"/>
+        <Condition ID="LowAngularVelocity" description="Açısal hız düşük mü?"/>
+        <Action ID="RewardEnergyEfficiency" description="Enerji verimliliği +3"/>
+        <Condition ID="LowPathDeviation" description="Yol sapması 10% altı mı?"/>
+        <Action ID="RewardPathEfficiency" description="Rota verimliliği +2"/>
+        <Condition ID="CollisionOccurred" description="Çarpışma oldu mu?"/>
+        <Action ID="PenaltyCollision" description="Çarpışma cezası -5"/>
+        <Condition ID="ProximityViolation" description="Yakın mesafe ihlali 0.5m altı mı?"/>
+        <Action ID="PenaltyProximity" description="İhlal cezası -4"/>
+        <Condition ID="DistanceIncreased" description="Mesafe arttı mı?"/>
+        <Action ID="PenaltyAwayFromGoal" description="Uzaklaşma cezası -3"/>
+        <Condition ID="TimeoutReached" description="500 adım geçti mi?"/>
+        <Action ID="PenaltyTimeout" description="Timeout cezası -10"/>
+        <Condition ID="UnnecessaryManeuver" description="Gereksiz manevra mı?"/>
+        <Action ID="PenaltyEnergyWaste" description="İsraf cezası -2"/>
+        <Action ID="SumReward" description="Toplam ödül hesapla"/>
+        <Action ID="LogReward" description="Ödül kaydı"/>
+        
+        <Condition ID="CheckGoalValid" description="Hedef geçerli mi?"/>
+        <Action ID="LoadMap" description="Statik harita yükle"/>
+        <Action ID="ValidateGoal" description="Hedef geçerliliği"/>
+        <Action ID="AStarAlgorithm" description="A* algoritması"/>
+        <Action ID="PathSmoothing" description="Bezier yol düzgünleştirme"/>
+        <Action ID="PathValidation" description="Yol doğrulama"/>
+        <Action ID="PublishPath" description="Global yol yayınla"/>
+        
+        <Action ID="SimpleState" description="Basit durum LIDAR+Hedef"/>
+        <Action ID="D3QNStandard" description="D3QN standart çıkarım"/>
+        <Action ID="StandardConstraints" description="Standart kısıtlamalar"/>
+        <Action ID="PublishCmdStandard" description="Standart hız komutu"/>
+        <Condition ID="GoalReached" description="Hedefe ulaşıldı mı?"/>
+        
+        <Condition ID="CheckCriticalBattery" description="Batarya 10% altı mı?"/>
+        <Action ID="CancelMission" description="Görev iptal et"/>
+        <Action ID="NavigateCharger" description="Şarj istasyonuna git"/>
+        <Action ID="DockCharger" description="Kenetlenme prosedürü"/>
+        <Action ID="StartCharging" description="Şarj başlat"/>
+        <Condition ID="CheckLowBattery" description="Batarya 10-20% arası mı?"/>
+        <Action ID="ReduceSpeed" description="Hız azalt 0.3 m/s"/>
+        <Action ID="DisableCamera" description="RGB kamera kapat"/>
+        <Action ID="ReduceSensors" description="Sensör oranı 50%"/>
+        <Action ID="DecideMission" description="Görev devam/iptal kararı"/>
+        <Condition ID="CheckNormalBattery" description="Batarya 20% üstü mü?"/>
+        <Action ID="FullPerformance" description="Tam performans modu"/>
+        
+        <Action ID="MonitorLidar" description="LIDAR sağlık kontrolü"/>
+        <Action ID="MonitorCamera" description="Kamera sağlık kontrolü"/>
+        <Action ID="MonitorMotors" description="Motor sağlık kontrolü"/>
+        <Action ID="MonitorROS" description="ROS topic kontrolü"/>
+        <Action ID="MonitorCPU" description="CPU kullanım kontrolü"/>
+        <Action ID="MonitorRAM" description="RAM kullanım kontrolü"/>
+        
+        <Condition ID="CheckStuck5s" description="5 saniye takıldı mı?"/>
+        <Action ID="Backup30cm" description="0.3m geri git"/>
+        <Action ID="Rotate30deg" description="30 derece dön"/>
+        <Condition ID="CheckStuck15s" description="15 saniye takıldı mı?"/>
+        <Action ID="ClearCostmap" description="Maliyet haritası temizle"/>
+        <Action ID="Replan" description="Yeniden planla"/>
+        <Action ID="Rotate360" description="360 derece dön"/>
+        <Condition ID="CheckStuck60s" description="60 saniye takıldı mı?"/>
+        <Action ID="LogFailure" description="Hata kaydı"/>
+        <Action ID="SafePark" description="Güvenli park yeri bul"/>
+        <Action ID="RequestHelp" description="İnsan yardımı talebi"/>
+    </TreeNodesModel>
+    
+    
+    <BehaviorTree ID="RobotMainController">
+        <Selector name="Ana Karar Seçici">
+            
+            <Sequence name="Acil Durum Protokolü">
+                <Action ID="CheckCollisionRisk"/>
+                <SubTree ID="EmergencyResponse"/>
+            </Sequence>
+            
+            <ReactiveSequence name="Sosyal Uyumlu Navigasyon">
+                <Condition ID="DetectHumanPresence"/>
+                <SubTree ID="LidarSocialMetrics"/>
+                <SubTree ID="D3QNSocialNavigation"/>
+                <SubTree ID="RewardCalculation"/>
+            </ReactiveSequence>
+            
+            <Sequence name="Standart Navigasyon">
+                <Condition ID="CheckGoalValid"/>
+                <SubTree ID="GlobalPlanning"/>
+                <SubTree ID="D3QNStandardNavigation"/>
+                <Condition ID="GoalReached"/>
+            </Sequence>
+            
+            <ReactiveSequence name="Enerji ve Sistem Yönetimi">
+                <SubTree ID="BatteryManagement"/>
+                <SubTree ID="SystemHealthMonitoring"/>
+            </ReactiveSequence>
+            
+        </Selector>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="EmergencyResponse">
+        <Sequence name="Acil Müdahale Prosedürü">
+            <Action ID="CalculateTTC"/>
+            <Action ID="AssessRiskLevel"/>
+            
+            <Selector name="Risk Seviyesine Göre Tepki">
+                <Sequence name="Kritik Risk TTC 1s altı">
+                    <Condition ID="IsCriticalRisk"/>
+                    <Action ID="HardBrake"/>
+                    <Action ID="ActivateWarnings"/>
+                </Sequence>
+                
+                <Sequence name="Yüksek Risk TTC 1-2s">
+                    <Condition ID="IsHighRisk"/>
+                    <Action ID="SoftBrake"/>
+                    <Action ID="CalculateEscape"/>
+                </Sequence>
+                
+                <Sequence name="Orta Risk TTC 2-4s">
+                    <Condition ID="IsMediumRisk"/>
+                    <Action ID="PreventiveSlowdown"/>
+                </Sequence>
+            </Selector>
+            
+            <Action ID="LogEmergency"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="LidarSocialMetrics">
+        <Sequence name="LIDAR Türevli 7 Sosyal Metrik">
+            <Action ID="PreprocessLidar"/>
+            <Action ID="NormalizeLidar"/>
+            <Action ID="DefineNearbyRegion"/>
+            
+            <Parallel name="7 Metrik Paralel Hesaplama">
+                <Action ID="ComputeClosestDistance"/>
+                <Action ID="ComputeAverageDistance"/>
+                <Action ID="ComputeNearbyCount"/>
+                <Action ID="ComputeRelativeVelocity"/>
+                <Action ID="ComputeApproachRatio"/>
+                <Action ID="ComputeViolationCount"/>
+                <Action ID="ComputeRiskScore"/>
+            </Parallel>
+            
+            <Action ID="CombineMetrics"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="D3QNSocialNavigation">
+        <ReactiveSequence name="D3QN Sosyal Karar Mekanizması">
+            <SubTree ID="StateVectorPreparation"/>
+            <SubTree ID="D3QNInference"/>
+            <SubTree ID="ActionMapping"/>
+            <SubTree ID="SafetyFiltering"/>
+            <Action ID="PublishVelocity"/>
+        </ReactiveSequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="StateVectorPreparation">
+        <Sequence name="374 Boyutlu Durum Vektörü Hazırlama">
+            <Action ID="CollectLidar360"/>
+            <Action ID="NormalizeLidar"/>
+            <Action ID="CollectSocial7"/>
+            <Action ID="CollectRobot7"/>
+            
+            <Parallel name="Robot Durum Bileşenleri">
+                <Action ID="GetRobotPose"/>
+                <Action ID="GetRobotVelocity"/>
+                <Action ID="GetGoalPosition"/>
+                <Action ID="GetGoalDistance"/>
+                <Action ID="GetGoalAngle"/>
+            </Parallel>
+            
+            <Action ID="ConcatenateState"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="D3QNInference">
+        <Sequence name="Dueling Double Deep Q-Network Çıkarımı">
+            <Action ID="Input374"/>
+            <Action ID="Hidden512"/>
+            <Action ID="Hidden256"/>
+            <Action ID="Hidden128"/>
+            
+            <Parallel name="Dueling Architecture Streams">
+                <Action ID="ValueStream1"/>
+                <Action ID="AdvantageStream7"/>
+            </Parallel>
+            
+            <Action ID="CombineQ"/>
+            <Action ID="SelectAction"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="ActionMapping">
+        <Sequence name="Eylem Uzayı Dönüşümü">
+            <Selector name="7 Ayrık Eylem Seçimi">
+                <Sequence name="Eylem 0">
+                    <Condition ID="IsAction0"/>
+                    <Action ID="SetAction0"/>
+                </Sequence>
+                <Sequence name="Eylem 1">
+                    <Condition ID="IsAction1"/>
+                    <Action ID="SetAction1"/>
+                </Sequence>
+                <Sequence name="Eylem 2">
+                    <Condition ID="IsAction2"/>
+                    <Action ID="SetAction2"/>
+                </Sequence>
+                <Sequence name="Eylem 3">
+                    <Condition ID="IsAction3"/>
+                    <Action ID="SetAction3"/>
+                </Sequence>
+                <Sequence name="Eylem 4">
+                    <Condition ID="IsAction4"/>
+                    <Action ID="SetAction4"/>
+                </Sequence>
+                <Sequence name="Eylem 5">
+                    <Condition ID="IsAction5"/>
+                    <Action ID="SetAction5"/>
+                </Sequence>
+                <Sequence name="Eylem 6">
+                    <Condition ID="IsAction6"/>
+                    <Action ID="SetAction6"/>
+                </Sequence>
+            </Selector>
+            <Action ID="OutputVelocity"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="SafetyFiltering">
+        <Sequence name="Güvenlik Kısıtlamaları ve Filtreleme">
+            <Action ID="CheckKinematic"/>
+            <Action ID="SimulateCollision"/>
+            <Action ID="CheckSocialSafety"/>
+            <Action ID="OutputSafeVelocity"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="RewardCalculation">
+        <Sequence name="Ödül Fonksiyonu İzleme">
+            <SubTree ID="PositiveRewards"/>
+            <SubTree ID="Penalties"/>
+            <Action ID="SumReward"/>
+            <Action ID="LogReward"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="PositiveRewards">
+        <Parallel name="Pozitif Ödül Bileşenleri">
+            <Selector name="Hedef Ödülleri">
+                <Sequence name="Hedefe Ulaşma">
+                    <Condition ID="GoalReachedCheck"/>
+                    <Action ID="RewardGoalReached"/>
+                </Sequence>
+                <Sequence name="Hedefe Yaklaşma">
+                    <Condition ID="DistanceDecreased"/>
+                    <Action ID="RewardApproaching"/>
+                </Sequence>
+            </Selector>
+            
+            <Selector name="Güvenlik Ödülleri">
+                <Sequence name="Güvenli Mesafe">
+                    <Condition ID="SafeDistanceCheck"/>
+                    <Action ID="RewardSafeDistance"/>
+                </Sequence>
+                <Sequence name="Engel Kaçınma">
+                    <Condition ID="ObstacleDistanceIncreased"/>
+                    <Action ID="RewardObstacleAvoid"/>
+                </Sequence>
+            </Selector>
+            
+            <Sequence name="Sosyal Uyum">
+                <Condition ID="SlowedNearHuman"/>
+                <Action ID="RewardSocialCompliance"/>
+            </Sequence>
+            
+            <Parallel name="Verimlilik Ödülleri">
+                <Sequence name="Enerji">
+                    <Condition ID="LowAngularVelocity"/>
+                    <Action ID="RewardEnergyEfficiency"/>
+                </Sequence>
+                <Sequence name="Rota">
+                    <Condition ID="LowPathDeviation"/>
+                    <Action ID="RewardPathEfficiency"/>
+                </Sequence>
+            </Parallel>
+        </Parallel>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="Penalties">
+        <Parallel name="Ceza Bileşenleri">
+            <Sequence name="Çarpışma">
+                <Condition ID="CollisionOccurred"/>
+                <Action ID="PenaltyCollision"/>
+            </Sequence>
+            <Sequence name="Yakın Mesafe İhlali">
+                <Condition ID="ProximityViolation"/>
+                <Action ID="PenaltyProximity"/>
+            </Sequence>
+            <Sequence name="Hedeften Uzaklaşma">
+                <Condition ID="DistanceIncreased"/>
+                <Action ID="PenaltyAwayFromGoal"/>
+            </Sequence>
+            <Sequence name="Zaman Aşımı">
+                <Condition ID="TimeoutReached"/>
+                <Action ID="PenaltyTimeout"/>
+            </Sequence>
+            <Sequence name="Enerji İsrafı">
+                <Condition ID="UnnecessaryManeuver"/>
+                <Action ID="PenaltyEnergyWaste"/>
+            </Sequence>
+        </Parallel>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="GlobalPlanning">
+        <Sequence name="Global Yol Planlama Sistemi">
+            <Action ID="LoadMap"/>
+            <Action ID="ValidateGoal"/>
+            <Action ID="AStarAlgorithm"/>
+            <Action ID="PathSmoothing"/>
+            <Action ID="PathValidation"/>
+            <Action ID="PublishPath"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="D3QNStandardNavigation">
+        <Sequence name="D3QN Standart Navigasyon">
+            <Action ID="SimpleState"/>
+            <Action ID="D3QNStandard"/>
+            <Action ID="StandardConstraints"/>
+            <Action ID="PublishCmdStandard"/>
+        </Sequence>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="BatteryManagement">
+        <Selector name="Batarya Yönetim Stratejisi">
+            <Sequence name="Kritik Batarya 10% altı">
+                <Condition ID="CheckCriticalBattery"/>
+                <Action ID="CancelMission"/>
+                <Action ID="NavigateCharger"/>
+                <Action ID="DockCharger"/>
+                <Action ID="StartCharging"/>
+            </Sequence>
+            
+            <ReactiveSequence name="Düşük Batarya 10-20%">
+                <Condition ID="CheckLowBattery"/>
+                <Parallel name="Enerji Tasarrufu Önlemleri">
+                    <Action ID="ReduceSpeed"/>
+                    <Action ID="DisableCamera"/>
+                    <Action ID="ReduceSensors"/>
+                </Parallel>
+                <Action ID="DecideMission"/>
+            </ReactiveSequence>
+            
+            <Sequence name="Normal Batarya 20%+">
+                <Condition ID="CheckNormalBattery"/>
+                <Action ID="FullPerformance"/>
+            </Sequence>
+        </Selector>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="SystemHealthMonitoring">
+        <Parallel name="Sistem Sağlık Kontrolleri">
+            <Action ID="MonitorLidar"/>
+            <Action ID="MonitorCamera"/>
+            <Action ID="MonitorMotors"/>
+            <Action ID="MonitorROS"/>
+            <Action ID="MonitorCPU"/>
+            <Action ID="MonitorRAM"/>
+        </Parallel>
+    </BehaviorTree>
+    
+    
+    <BehaviorTree ID="RecoveryBehaviors">
+        <Selector name="Kurtarma Stratejileri">
+            <Sequence name="Hafif Kurtarma 5s">
+                <Condition ID="CheckStuck5s"/>
+                <Action ID="Backup30cm"/>
+                <Action ID="Rotate30deg"/>
+            </Sequence>
+            
+            <Sequence name="Orta Kurtarma 15s">
+                <Condition ID="CheckStuck15s"/>
+                <Action ID="ClearCostmap"/>
+                <Action ID="Replan"/>
+                <Action ID="Rotate360"/>
+            </Sequence>
+            
+            <Sequence name="Ağır Kurtarma 60s">
+                <Condition ID="CheckStuck60s"/>
+                <Action ID="LogFailure"/>
+                <Action ID="SafePark"/>
+                <Action ID="RequestHelp"/>
+            </Sequence>
+        </Selector>
+    </BehaviorTree>
+    
+</root>

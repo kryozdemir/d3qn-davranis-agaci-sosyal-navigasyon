@@ -1,0 +1,12 @@
+robot:
+  cmd_vel_topic: "/cmd_vel"
+  scan_topic: "/scan"
+  odom_topic: "/odom"
+  lineer_hiz:
+    ileri: 0.22
+    yavas: 0.12
+  acisal_hiz:
+    donus: 1.0
+  lazer:
+    sektor_sayisi: 10
+    maksimum_menzil: 3.5

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root main_tree_to_execute="ThreateningNavTree" BTCPP_format="4">
+
+  <TreeNodesModel>
+    <Action ID="ThreateningNav">
+      <input_port name="agent_id" type="int"> ajanın kimliği (ID) </input_port>
+      <input_port name="time_step" type="double"> hareket hesabı için zaman adımı (saniye) </input_port>
+      <input_port name="goal_dist" type="double"> ajan hedefini robotun önüne taşıma mesafesi </input_port>
+    </Action>
+
+    <Condition ID="IsRobotVisible">
+      <input_port name="agent_id" type="int"> ajanın kimliği (ID) </input_port>
+    </Condition>
+
+    <Condition ID="TimeExpiredCondition">
+      <input_port name="seconds" type="double"> süre (saniye) </input_port>
+      <input_port name="ts" type="double"> zaman adımı (dt) </input_port>
+      <input_port name="only_once" type="bool"> boolean: süre dolunca zamanlayıcı sıfırlansın mı (reset) / sıfırlanmasın mı </input_port>
+    </Condition>
+  </TreeNodesModel>
+
+  <include path="BTRegularNav.xml" />
+
+  <BehaviorTree ID="ThreateningNavTree">
+    <Fallback name="ThreateningFallback">
+
+      <Sequence name="ThreadNav">
+        <IsRobotVisible agent_id="{id}"/>
+
+        <Sequence name="ThreadTimerNav">
+          <Inverter>
+            <TimeExpiredCondition seconds="{duration}" ts="{dt}" only_once="{once}" />
+          </Inverter>
+
+          <ThreateningNav agent_id="{id}" time_step="{dt}" goal_dist="{frontdist}" />
+        </Sequence>
+      </Sequence>
+
+      <Sequence name="RegNav">
+        <SetBlackboard output_key="agentid" value="{id}" />
+        <SetBlackboard output_key="timestep" value="{dt}" />
+        <SubTree ID="RegularNavTree" id="{agentid}" dt="{timestep}" />
+      </Sequence>
+
+    </Fallback>
+  </BehaviorTree>
+
+</root>

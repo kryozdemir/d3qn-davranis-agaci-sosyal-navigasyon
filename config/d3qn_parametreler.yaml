@@ -1,0 +1,31 @@
+yamlag:
+  durum_boyut: 14
+  aksiyon_boyut: 5
+  gizli_boyut: 256
+
+egitim:
+  episode_sayisi: 1000
+  maksimum_adim_per_episode: 500
+  parti_boyutu: 64
+  bellek_boyutu: 100000
+  ogrenme_orani: 0.001
+  gamma: 0.99
+  epsilon_baslangic: 1.0
+  epsilon_bitis: 0.01
+  epsilon_azalma: 0.995
+  hedef_ag_guncelleme_adimi: 1000
+  hedef_ag_yumusak_guncelleme: 0.005
+  baslangic_rastgele_adim: 2000
+
+oduller:
+  hedef_ulasildi: 200.0
+  carpisma: -100.0
+  zaman_adimi: -0.01
+  ilerleme_katsayi: 10.0
+  yakin_ihlal_cezasi: -0.2
+
+davranis_agaci:
+  aktif: true
+  carpisma_esik: 0.25
+  hedef_yaklasma_esik: 1.0
+  yakin_mesafe_esik: 0.5

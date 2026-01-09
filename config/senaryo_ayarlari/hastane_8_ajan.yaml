@@ -1,0 +1,253 @@
+loader:
+  ros__parameters:
+    yaml_temel_adi: ajanlar_hastane
+    simulator: Gazebo Classic
+    harita: cafe
+    insanlari_yayinla: true
+    
+    # Hastane Senaryosu - 150 m² Alan (15m x 10m)
+    # Toplam: 8 ajan
+    # Yasli (60+): 4 kisi (%50) - Cekingen/Notr - Yavas (0.25-0.35 m/s)
+    # Yetiskin (26-60): 3 kisi (%37.5) - Notr/Cekingen - Orta (0.38-0.42 m/s)
+    # Genc (13-25): 1 kisi (%12.5) - Merakli - Orta-Hizli (0.50 m/s)
+    # Cocuk (0-12): 0 kisi (%0)
+    
+    # Sosyal Tutum Dagilimi:
+    # - Cekingen: 4 kisi (%50)
+    # - Notr: 3 kisi (%37.5)
+    # - Merakli: 1 kisi (%12.5)
+    
+    genel_hedefler:
+      1:
+        x: -3.700
+        y: -3.290
+      2:
+        x: 0.184
+        y: -4.850
+      3:
+        x: 0.269
+        y: -3.204
+      4:
+        x: 2.963
+        y: 0.113
+      5:
+        x: -2.880
+        y: 0.028
+      6:
+        x: 2.000
+        y: 4.226
+      7:
+        x: 0.411
+        y: -6.039
+    
+    ajanlar:
+      - ajan1
+      - ajan2
+      - ajan3
+      - ajan4
+      - ajan5
+      - ajan6
+      - ajan7
+      - ajan8
+    
+
+    ajan1:
+      id: 1
+      grup_id: -1
+      gorunum: 3  
+      maks_hiz: 0.25
+      yaricap: 0.45
+      hedef_yaricap: 0.4
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: 2.395
+        y: 5.639
+        z: 1.250
+        h: -2.196
+      davranis:
+        tip: Cekingen  
+        mesafe: 2.500
+        yapilandirma: 0
+        hedef_kuvvet_carpan: 1.5
+        engel_kuvvet_carpan: 15.0
+        sosyal_kuvvet_carpan: 8.0
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 1
+        - 6
+    
+    ajan2:
+      id: 2
+      grup_id: -1
+      gorunum: 3
+      maks_hiz: 0.30
+      yaricap: 0.45
+      hedef_yaricap: 0.4
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: -3.585
+        y: 2.380
+        z: 1.250
+        h: -1.087
+      davranis:
+        tip: Cekingen  
+        mesafe: 2.500
+        yapilandirma: 0
+        hedef_kuvvet_carpan: 1.5
+        engel_kuvvet_carpan: 15.0
+        sosyal_kuvvet_carpan: 8.0
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 2
+        - 7
+    
+    ajan3:
+      id: 3
+      grup_id: -1
+      gorunum: 3
+      maks_hiz: 0.28
+      yaricap: 0.45
+      hedef_yaricap: 0.4
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: 0.411
+        y: -8.723
+        z: 1.250
+        h: 1.621
+      davranis:
+        tip: Notr  
+        yapilandirma: 0
+        hedef_kuvvet_carpan: 1.5
+        engel_kuvvet_carpan: 15.0
+        sosyal_kuvvet_carpan: 8.0
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 3
+        - 4
+    
+    ajan4:
+      id: 4
+      grup_id: -1
+      gorunum: 3
+      maks_hiz: 0.35
+      yaricap: 0.45
+      hedef_yaricap: 0.4
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: 1.500
+        y: 3.000
+        z: 1.250
+        h: -2.000
+      davranis:
+        tip: Cekingen
+        mesafe: 2.500
+        yapilandirma: 0
+        hedef_kuvvet_carpan: 1.5
+        engel_kuvvet_carpan: 15.0
+        sosyal_kuvvet_carpan: 8.0
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 4
+        - 5
+    
+
+    ajan5:
+      id: 5
+      grup_id: -1
+      gorunum: 2  
+      maks_hiz: 0.40
+      yaricap: 0.40
+      hedef_yaricap: 0.3
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: -2.000
+        y: -3.000
+        z: 1.250
+        h: 0.500
+      davranis:
+        tip: Notr 
+        yapilandirma: 1
+        hedef_kuvvet_carpan: 2.0
+        engel_kuvvet_carpan: 12.0
+        sosyal_kuvvet_carpan: 6.5
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 5
+        - 6
+    
+    ajan6:
+      id: 6
+      grup_id: -1
+      gorunum: 2
+      maks_hiz: 0.38
+      yaricap: 0.40
+      hedef_yaricap: 0.3
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: 0.000
+        y: 4.000
+        z: 1.250
+        h: -1.000
+      davranis:
+        tip: Notr  
+        yapilandirma: 1
+        hedef_kuvvet_carpan: 2.0
+        engel_kuvvet_carpan: 12.0
+        sosyal_kuvvet_carpan: 6.5
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 1
+        - 7
+    
+    ajan7:
+      id: 7
+      grup_id: -1
+      gorunum: 2
+      maks_hiz: 0.42
+      yaricap: 0.40
+      hedef_yaricap: 0.3
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: 2.500
+        y: -1.000
+        z: 1.250
+        h: 2.000
+      davranis:
+        tip: Cekingen 
+        mesafe: 2.500
+        yapilandirma: 1
+        hedef_kuvvet_carpan: 2.0
+        engel_kuvvet_carpan: 12.0
+        sosyal_kuvvet_carpan: 6.5
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 2
+        - 3
+    
+   
+    ajan8:
+      id: 8
+      grup_id: -1
+      gorunum: 1 
+      maks_hiz: 0.50
+      yaricap: 0.35
+      hedef_yaricap: 0.3
+      dongusel_hedefler: true
+      baslangic_konum:
+        x: -1.500
+        y: 6.000
+        z: 1.250
+        h: -1.500
+      davranis:
+        tip: Merakli 
+        mesafe: 2.000
+        sure: 20.00
+        bir_kere: false
+        yapilandirma: 2
+        hedef_kuvvet_carpan: 2.5
+        engel_kuvvet_carpan: 10.0
+        sosyal_kuvvet_carpan: 5.0
+        diger_kuvvet_carpan: 20.0
+      hedefler:
+        - 3
+        - 4
